@@ -28,7 +28,11 @@
 package net.hellonico.phfilters;
 
 
-import processing.core.*;
+import java.awt.image.BufferedImage;
+
+import processing.core.PImage;
+
+import com.jhlabs.image.TransferFilter;
 
 /**
  * This is a template class and can be used to start a new processing library or tool.
@@ -42,15 +46,9 @@ import processing.core.*;
  *
  */
 
-public class HelloLibrary {
-	
-	// myParent is a reference to the parent sketch
-	PApplet myParent;
-
-	int myVariable = 0;
+public class PFilterLibrary {
 	
 	public final static String VERSION = "##library.prettyVersion##";
-	
 
 	/**
 	 * a Constructor, usually called in the setup() method in your sketch to
@@ -59,46 +57,18 @@ public class HelloLibrary {
 	 * @example Hello
 	 * @param theParent
 	 */
-	public HelloLibrary(PApplet theParent) {
-		myParent = theParent;
-		welcome();
+	public PFilterLibrary() {
+		
 	}
 	
+	public PImage apply(PImage image, TransferFilter filter) {
+	     BufferedImage img = (BufferedImage) image.getImage();
+	     return new PImage(filter.filter(img, img));
+	} 
 	
-	private void welcome() {
-		System.out.println("##library.name## ##library.prettyVersion## by ##author##");
-	}
-	
-	
-	public String sayHello() {
-		return "hello library.";
-	}
-	/**
-	 * return the version of the library.
-	 * 
-	 * @return String
-	 */
 	public static String version() {
 		return VERSION;
 	}
 
-	/**
-	 * 
-	 * @param theA
-	 *          the width of test
-	 * @param theB
-	 *          the height of test
-	 */
-	public void setVariable(int theA, int theB) {
-		myVariable = theA + theB;
-	}
-
-	/**
-	 * 
-	 * @return int
-	 */
-	public int getVariable() {
-		return myVariable;
-	}
 }
 
