@@ -29,10 +29,12 @@ package net.hellonico.phfilters;
 
 
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 
 import processing.core.PImage;
 
-import com.jhlabs.image.TransferFilter;
+import com.jhlabs.image.AbstractBufferedImageOp;
 
 /**
  * This is a template class and can be used to start a new processing library or tool.
@@ -61,10 +63,29 @@ public class PFilterLibrary {
 		
 	}
 	
-	public PImage apply(PImage image, TransferFilter filter) {
+	public PImage apply(PImage image, AbstractBufferedImageOp filter) {
 	     BufferedImage img = (BufferedImage) image.getImage();
 	     return new PImage(filter.filter(img, img));
 	} 
+	public AbstractBufferedImageOp getFilter(String name) {
+		return this.getFilter(name, new HashMap());
+	}
+	public AbstractBufferedImageOp getFilter(String name, HashMap settings) {
+		try {
+			Class klass = Class.forName("com.jhlabs.image."+name+"Filter");
+			Method[] ms = klass.getMethods();
+			for(Method m : ms) {
+				String name_ = m.getName();
+				if(name_.startsWith("set")) {
+					Object o = settings.get(name_);
+				}
+			}
+			AbstractBufferedImageOp newFilter = (AbstractBufferedImageOp) klass.newInstance();
+			return newFilter;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 	
 	public static String version() {
 		return VERSION;
